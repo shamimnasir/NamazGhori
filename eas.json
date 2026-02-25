@@ -1,0 +1,43 @@
+{
+  "cli": {
+    "version": ">= 3.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "image": "ubuntu-22.04-jdk-17-ndk-r27-node-20.18.0"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://zsjnypbjlsqcnwxcnnpf.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzam55cGJqbHNxY253eGNubnBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwMDcwMjUsImV4cCI6MjA4MTU4MzAyNX0.yeCU_61nYuQAid35kYUFuUv-3PdZGnenpOZUCP0py8Y"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "image": "ubuntu-22.04-jdk-17-ndk-r27-node-20.18.0"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://zsjnypbjlsqcnwxcnnpf.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzam55cGJqbHNxY253eGNubnBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwMDcwMjUsImV4cCI6MjA4MTU4MzAyNX0.yeCU_61nYuQAid35kYUFuUv-3PdZGnenpOZUCP0py8Y"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle",
+        "image": "ubuntu-22.04-jdk-17-ndk-r27-node-20.18.0"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://zsjnypbjlsqcnwxcnnpf.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpzam55cGJqbHNxY253eGNubnBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwMDcwMjUsImV4cCI6MjA4MTU4MzAyNX0.yeCU_61nYuQAid35kYUFuUv-3PdZGnenpOZUCP0py8Y"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
