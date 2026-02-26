@@ -1,0 +1,92 @@
+name: Flutter Android Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_id:
+        description: 'Build ID from database'
+        required: true
+      branch:
+        description: 'Branch to build'
+        required: true
+        default: 'main'
+      commit_hash:
+        description: 'Specific commit to build'
+        required: false
+
+env:
+  JAVA_VERSION: '17'
+  FLUTTER_VERSION: 'stable'
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_hash || github.event.inputs.branch }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+        continue-on-error: true
+
+      - name: Decode keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+
+      - name: Create key.properties
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          cat > android/key.properties << EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=release.keystore
+          EOF
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Build App Bundle
+        run: flutter build appbundle --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-bundle-release
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - name: Cleanup credentials
+        if: always()
+        run: |
+          rm -f android/app/release.keystore
+          rm -f android/key.properties
